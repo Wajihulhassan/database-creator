@@ -20,6 +20,22 @@ public class ConvertJsonIntoSQL {
         all_actors_map = new HashMap<>();
     }
 
+    public void parseJsonFileWithoutOrder(String path)throws IOException, SQLException{
+        System.out.println("-======= Parsing "+ path);
+        File file = new File(path);
+        FileReader fileReader;
+        fileReader = new FileReader(file);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        String line;
+        while ((line = bufferedReader.readLine()) != null) {
+            JSONObject JsonObject = new JSONObject(line);
+            Map<String,Object> tmp = JsonFlattener.flattenAsMap(JsonObject.toString());
+            insertJson(tmp);
+        }
+        fileReader.close();
+        addProcessEntities();
+    }
+
     public void parseJsonFile(String path) throws IOException, SQLException {
         System.out.println("-======= Parsing "+ path);
         File file = new File(path);
@@ -35,10 +51,12 @@ public class ConvertJsonIntoSQL {
                 try {
                     Instant t1 = Instant.parse(a1.get("timestamp").toString());
                     Instant t2 = Instant.parse(a2.get("timestamp").toString());
-                    if(t1.compareTo(t2) >= 0)
+                    if(t1.compareTo(t2) > 0) {
                         return 1;
-                    else
+                    }
+                    else {
                         return -1;
+                    }
                 } catch (Exception e) {
                     System.out.println("Caught Nullpointer in " + a1.toString());
                     System.out.println("Caught Nullpointer in " + a2.toString());

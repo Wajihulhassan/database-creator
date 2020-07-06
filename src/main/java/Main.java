@@ -15,9 +15,13 @@ import java.util.stream.Stream;
 public class Main {
 
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
-	    System.out.println(".......Starting........");
+		if (args.length != 1) {
+			System.out.println("Argument: path to dataset is missing ");
+			return;
+		}
+		System.out.println(".......Starting........");
 
-		String directory = "/Users/wajih/Downloads/logs/short/";
+		String directory = args[0];
 		String url = "jdbc:postgresql://localhost:5432/2019-09-25";
 		String user = "wajih";
 		String password = "corelight";
@@ -108,7 +112,7 @@ public class Main {
 							continue;
 						}
 						System.out.println("==========Final path: " + final_path);
-						cjs.parseJsonFile(final_path);
+						cjs.parseJsonFileWithoutOrder(final_path);
 						executeBashCommand("rm -rf ./src/tmp/*");
 					}
 				}

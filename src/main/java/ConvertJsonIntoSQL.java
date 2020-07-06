@@ -27,10 +27,17 @@ public class ConvertJsonIntoSQL {
         fileReader = new FileReader(file);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            JSONObject JsonObject = new JSONObject(line);
-            Map<String,Object> tmp = JsonFlattener.flattenAsMap(JsonObject.toString());
-            insertJson(tmp);
+        while ((line = bufferedReader.readLine()) != null)
+        {
+            try {
+                JSONObject JsonObject = new JSONObject(line);
+                Map<String, Object> tmp = JsonFlattener.flattenAsMap(JsonObject.toString());
+                insertJson(tmp);
+            } catch (Exception e){
+                System.out.println("Caught exception in json:  " + line);
+                e.printStackTrace();
+                System.exit(0);
+            }
         }
         fileReader.close();
         addProcessEntities();

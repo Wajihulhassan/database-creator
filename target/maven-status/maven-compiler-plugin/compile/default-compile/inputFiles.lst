@@ -1,4 +1,6 @@
-/home/ubuntu/projects/JDBC-PostgreSQL-SimpleExample/src/main/java/Main.java
-/home/ubuntu/projects/JDBC-PostgreSQL-SimpleExample/src/main/java/PersonJDBC.java
-/home/ubuntu/projects/JDBC-PostgreSQL-SimpleExample/src/main/java/PersonDAO.java
-/home/ubuntu/projects/JDBC-PostgreSQL-SimpleExample/src/main/java/Person.java
+/Users/wajih/projects/database-creater/src/main/java/CreateTables.java
+/Users/wajih/projects/database-creater/src/main/java/Person.java
+/Users/wajih/projects/database-creater/src/main/java/Main.java
+/Users/wajih/projects/database-creater/src/main/java/ConvertJsonIntoSQL.java
+/Users/wajih/projects/database-creater/src/main/java/PersonDAO.java
+/Users/wajih/projects/database-creater/src/main/java/ProcessEntities.java

@@ -14,14 +14,16 @@ import java.util.stream.Stream;
 
 public class Main {
 
+	static String TMP_PATH;
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
-		if (args.length != 1) {
+		if (args.length != 2) {
 			System.out.println("Argument: path to dataset is missing ");
 			return;
 		}
 		System.out.println(".......Starting........");
 
 		String directory = args[0];
+		TMP_PATH = args[1];
 		String url = "jdbc:postgresql://localhost:5432/2019-09-25";
 		String user = "wajih";
 		String password = "corelight";
@@ -93,20 +95,20 @@ public class Main {
 
 	public static void readDirecotryAndInsertSQL(String directory, ConvertJsonIntoSQL cjs){
 			String dataset_path =  directory;
-			executeBashCommand("rm -rf ./src/tmp/*");
-			executeBashCommand("mkdir -p ./src/tmp/");
+			executeBashCommand("rm -rf " + TMP_PATH + "/*");
+			executeBashCommand("mkdir -p " + TMP_PATH);
 			try (Stream<Path> walk = Files.walk(Paths.get(dataset_path))) {
 				List<Path> file_paths = walk.collect((Collectors.toList()));
 				for (Path path : file_paths) {
 					if (path.toString().endsWith(".json.gz")) {
-						executeBashCommand("rm -rf ./src/tmp/*");
+						executeBashCommand("rm -rf " + TMP_PATH + "/*");
 						String test_name = getFileName(path.toString());
 						System.out.println(test_name);
-						String copied_path = "./src/tmp/" + test_name;
-						String final_path = "./src/tmp/" + removeExtension(test_name);
+						String copied_path = TMP_PATH + test_name;
+						String final_path = TMP_PATH + removeExtension(test_name);
 						executeBashCommand("cp " + path + " " + copied_path);
 						executeBashCommand("gunzip -c " + copied_path + " > " + final_path);
-						File[] files = new File("./src/tmp/").listFiles();
+						File[] files = new File(TMP_PATH).listFiles();
 						if (files.length <= 0) {
 							System.out.println("WARNING GO BACK");
 							continue;

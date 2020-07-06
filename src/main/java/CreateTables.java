@@ -22,6 +22,7 @@ public class CreateTables implements PersonDAO{
 		addRegistryTable();
 		addModuleTable();
 		addProcessEntitiesTable();
+		System.out.println("Done Creating Tables");
 	}
 
 	public void addProcessTable() throws SQLException {

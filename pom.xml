@@ -3,7 +3,19 @@
   <groupId>br.rafael.example.jdbc</groupId>
   <artifactId>JDBC-PostgreSQL-SimpleExample</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <!--  all project dependency -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <!--  all project dependency -->
   <dependencies>
 		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
 		<!--  depencency of postgresql. it is responsible for database communication  -->
@@ -12,6 +24,24 @@
     		<artifactId>postgresql</artifactId>
     		<version>42.1.1</version>
 		</dependency>
+      <dependency>
+          <groupId>org.json</groupId>
+          <artifactId>json</artifactId>
+          <version>20160810</version>
+      </dependency>
+
+      <dependency>
+          <groupId>com.github.wnameless</groupId>
+          <artifactId>json-flattener</artifactId>
+          <version>0.2.2</version>
+      </dependency>
+
+      <dependency>
+          <groupId>joda-time</groupId>
+          <artifactId>joda-time</artifactId>
+          <version>2.10.6</version>
+      </dependency>
+
   </dependencies>
 
     <properties>

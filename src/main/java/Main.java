@@ -1,34 +1,120 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Main {
 
-	public static void main(String[] args) throws ClassNotFoundException, SQLException {
+	public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
 	    System.out.println(".......Starting........");
 		//you need create database with this name 'github-example-jdbc'
-		String url = "jdbc:postgresql://localhost:5432/test";
-		//user default
+		String url = "jdbc:postgresql://localhost:5432/2019-09-25";
 		String user = "wajih";
-		//your password. root is default
 		String password = "corelight";
-		PersonJDBC pjdbc = new PersonJDBC(url, user, password);
+		Class.forName("org.postgresql.Driver");
+		Connection connection = DriverManager.getConnection(url, user, password);
 
-		Person person = new Person();
-		person.setName("Chloe");
-		person.setIdentity("ZAA21");
-		person.setBirthday("10/10/1980");
-		pjdbc.addPerson(person);
+		CreateTables createTables = new CreateTables(connection);
+		createTables.addAllTables();
+		ConvertJsonIntoSQL cjs = new ConvertJsonIntoSQL(connection);
+		readDirecotryAndInsertSQL("/Users/wajih/Downloads/logs/short/", cjs);
+		connection.close();
 
+	}
 
-		ArrayList<Person> array = pjdbc.getAllPersons();
+	/**
+	 * Execute a bash command. We can handle complex bash commands including
+	 * multiple executions (; | && ||), quotes, expansions ($), escapes (\), e.g.:
+	 *     "cd /abc/def; mv ghi 'older ghi '$(whoami)"
+	 * @param command
+	 * @return true if bash got started, but your command may have failed.
+	 */
+	public static boolean executeBashCommand(String command) {
+		boolean success = false;
+		System.out.println("Executing BASH command:\n   " + command);
+		Runtime r = Runtime.getRuntime();
+		// Use bash -c so we can handle things like multi commands separated by ; and
+		// things like quotes, $, |, and \. My tests show that command comes as
+		// one argument to bash, so we do not need to quote it to make it one thing.
+		// Also, exec may object if it does not have an executable file as the first thing,
+		// so having bash here makes it happy provided bash is installed and in path.
+		String[] commands = {"bash", "-c", command};
+		try {
+			Process p = r.exec(commands);
 
-		for (Person i : array) {
-			System.out.println(i.getName()+ ", your id is "+ i.getId()+
-					", "+ i.getBirthday());
+			p.waitFor();
+			BufferedReader b = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			String line = "";
+
+			while ((line = b.readLine()) != null) {
+				System.out.println(line);
+			}
+
+			b.close();
+			success = true;
+		} catch (Exception e) {
+			System.err.println("Failed to execute bash with command: " + command);
+			e.printStackTrace();
 		}
+		return success;
+	}
 
-		System.out.println(pjdbc.getPerson("Rafael").getName());
-		pjdbc.removePerson(person);
+	public static String getFileName(String path) {
+		if (path.contains("/")) {
+			String ret_string = path.substring(path.lastIndexOf("/") + 1);
+			return ret_string;
+		} else if (path.contains("\\")) {
+			String ret_string = path.substring(path.lastIndexOf("\\") + 1);
+			return ret_string;
+		}
+		return "";
+	}
+
+	public static String removeExtension(String filename){
+		if (filename.contains(".")) {
+			return filename.substring(0,filename.lastIndexOf("."));
+		}
+		return "";
+	}
+
+	public static void readDirecotryAndInsertSQL(String directory, ConvertJsonIntoSQL cjs){
+			String dataset_path =  directory;
+			executeBashCommand("rm -rf ./src/tmp/*");
+			executeBashCommand("mkdir -p ./src/tmp/");
+			try (Stream<Path> walk = Files.walk(Paths.get(dataset_path))) {
+				List<Path> file_paths = walk.collect((Collectors.toList()));
+				for (Path path : file_paths) {
+					if (path.toString().endsWith(".json.gz")) {
+						executeBashCommand("rm -rf ./src/tmp/*");
+						String test_name = getFileName(path.toString());
+						System.out.println(test_name);
+						String copied_path = "./src/tmp/" + test_name;
+						String final_path = "./src/tmp/" + removeExtension(test_name);
+						executeBashCommand("cp " + path + " " + copied_path);
+						executeBashCommand("gunzip -c " + copied_path + " > " + final_path);
+						File[] files = new File("./src/tmp/").listFiles();
+						if (files.length <= 0) {
+							System.out.println("WARNING GO BACK");
+							continue;
+						}
+						System.out.println("==========Final path: " + final_path);
+						cjs.parseJsonFile(final_path);
+						executeBashCommand("rm -rf ./src/tmp/*");
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 	}
 
 }

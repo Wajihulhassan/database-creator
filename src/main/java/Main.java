@@ -16,17 +16,18 @@ public class Main {
 
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
 	    System.out.println(".......Starting........");
-		//you need create database with this name 'github-example-jdbc'
+
+		String directory = "/Users/wajih/Downloads/logs/short/";
 		String url = "jdbc:postgresql://localhost:5432/2019-09-25";
 		String user = "wajih";
 		String password = "corelight";
 		Class.forName("org.postgresql.Driver");
-		Connection connection = DriverManager.getConnection(url, user, password);
 
+		Connection connection = DriverManager.getConnection(url, user, password);
 		CreateTables createTables = new CreateTables(connection);
 		createTables.addAllTables();
 		ConvertJsonIntoSQL cjs = new ConvertJsonIntoSQL(connection);
-		readDirecotryAndInsertSQL("/Users/wajih/Downloads/logs/short/", cjs);
+		readDirecotryAndInsertSQL(directory, cjs);
 		connection.close();
 
 	}

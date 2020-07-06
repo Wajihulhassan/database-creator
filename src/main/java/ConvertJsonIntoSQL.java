@@ -40,7 +40,7 @@ public class ConvertJsonIntoSQL {
             }
         }
         fileReader.close();
-        addProcessEntities();
+        //addProcessEntities();
     }
 
     public void parseJsonFile(String path) throws IOException, SQLException {

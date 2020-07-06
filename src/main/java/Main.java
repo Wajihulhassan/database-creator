@@ -34,6 +34,7 @@ public class Main {
 		createTables.addAllTables();
 		ConvertJsonIntoSQL cjs = new ConvertJsonIntoSQL(connection);
 		readDirecotryAndInsertSQL(directory, cjs);
+		cjs.addProcessEntities();
 		connection.close();
 
 	}

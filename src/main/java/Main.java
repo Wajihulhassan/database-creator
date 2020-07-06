@@ -115,7 +115,7 @@ public class Main {
 						}
 						System.out.println("==========Final path: " + final_path);
 						cjs.parseJsonFileWithoutOrder(final_path);
-						executeBashCommand("rm -rf ./src/tmp/*");
+						executeBashCommand("rm -rf "+ TMP_PATH +"/*");
 					}
 				}
 			} catch (Exception e) {

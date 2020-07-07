@@ -1,7 +1,9 @@
 ConvertJsonIntoSQL.class
 Main.class
+SocketRow.class
 CreateTables.class
-Person.class
+FileRow.class
 ProcessEntities.class
-PersonDAO.class
+ProcessRow.class
+ModuleRow.class
 ConvertJsonIntoSQL$1.class

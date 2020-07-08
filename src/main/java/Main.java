@@ -24,7 +24,7 @@ public class Main {
 
 		String directory = args[0];
 		TMP_PATH = args[1];
-		String url = "jdbc:postgresql://localhost:5432/2019-09-25";
+		String url = "jdbc:postgresql://localhost:5432/2019-09-24";
 		String user = "wajih";
 		String password = "corelight";
 		Class.forName("org.postgresql.Driver");

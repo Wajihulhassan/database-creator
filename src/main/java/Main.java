@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -117,6 +118,7 @@ public class Main {
 						System.out.println("==========Final path: " + final_path);
 						cjs.parseJsonFileWithoutOrder(final_path);
 						executeBashCommand("rm -rf "+ TMP_PATH +"/*");
+						System.out.println("Done with \""+ test_name+"\"");
 					}
 				}
 			} catch (Exception e) {

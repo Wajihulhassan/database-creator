@@ -2,6 +2,7 @@ ConvertJsonIntoSQL.class
 Main.class
 SocketRow.class
 CreateTables.class
+CreateZeekTables.class
 FileRow.class
 ProcessEntities.class
 ProcessRow.class

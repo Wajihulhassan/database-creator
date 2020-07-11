@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -17,26 +16,34 @@ public class Main {
 
 	static String TMP_PATH;
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
-		if (args.length != 2) {
-			System.out.println("Argument: path to dataset is missing ");
+		if (args.length != 3) {
+			System.out.println("Arguments are missing");
 			return;
 		}
 		System.out.println(".......Starting........");
 
 		String directory = args[0];
 		TMP_PATH = args[1];
-		String url = "jdbc:postgresql://localhost:5432/2019-09-24";
+		String net_json_directory = args[2];
+		String url = "jdbc:postgresql://localhost:5432/2019-09-25";
 		String user = "wajih";
 		String password = "corelight";
 		Class.forName("org.postgresql.Driver");
 
+
+
 		Connection connection = DriverManager.getConnection(url, user, password);
-		CreateTables createTables = new CreateTables(connection);
-		createTables.addAllTables();
-		ConvertJsonIntoSQL cjs = new ConvertJsonIntoSQL(connection);
-		readDirecotryAndInsertSQL(directory, cjs);
-		cjs.addProcessEntities();
-		connection.close();
+
+		CreateZeekTables czt = new CreateZeekTables(connection);
+		czt.addBroProcessTable();
+		readDirecotryAndInsertSQL(net_json_directory,czt);
+
+//		CreateTables createTables = new CreateTables(connection);
+//		createTables.addAllTables();
+//		ConvertJsonIntoSQL cjs = new ConvertJsonIntoSQL(connection);
+//		readDirecotryAndInsertSQL(directory, cjs);
+//		cjs.addProcessEntities();
+//		connection.close();
 
 	}
 
@@ -124,6 +131,37 @@ public class Main {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+
+	}
+	public static void readDirecotryAndInsertSQL(String directory, CreateZeekTables czt){
+		String dataset_path =  directory;
+		executeBashCommand("rm -rf " + TMP_PATH + "/*");
+		executeBashCommand("mkdir -p " + TMP_PATH);
+		try (Stream<Path> walk = Files.walk(Paths.get(dataset_path))) {
+			List<Path> file_paths = walk.collect((Collectors.toList()));
+			for (Path path : file_paths) {
+				if (path.toString().endsWith(".json.gz")) {
+					executeBashCommand("rm -rf " + TMP_PATH + "/*");
+					String test_name = getFileName(path.toString());
+					System.out.println(test_name);
+					String copied_path = TMP_PATH + test_name;
+					String final_path = TMP_PATH + removeExtension(test_name);
+					executeBashCommand("cp " + path + " " + copied_path);
+					executeBashCommand("gunzip -c " + copied_path + " > " + final_path);
+					File[] files = new File(TMP_PATH).listFiles();
+					if (files.length <= 0) {
+						System.out.println("WARNING GO BACK");
+						continue;
+					}
+					System.out.println("==========Final path: " + final_path);
+					czt.parseJsonFileWithoutOrder(final_path);
+					executeBashCommand("rm -rf "+ TMP_PATH +"/*");
+					System.out.println("Done with \""+ test_name+"\"");
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 

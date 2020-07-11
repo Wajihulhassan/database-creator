@@ -38,7 +38,7 @@ public class CreateZeekTables {
             }
         }
         fileReader.close();
-        System.out.println("Bulk inserting.....");
+        System.out.println("Done inserting.....");
         //addProcessEntities();
     }
 

@@ -25,7 +25,8 @@ public class Main {
 		String directory = args[0];
 		TMP_PATH = args[1];
 		String net_json_directory = args[2];
-		String url = "jdbc:postgresql://localhost:5432/2019-09-25";
+		String database_name = args[3];
+		String url = "jdbc:postgresql://localhost:5432/" + database_name;
 		String user = "wajih";
 		String password = "corelight";
 		Class.forName("org.postgresql.Driver");

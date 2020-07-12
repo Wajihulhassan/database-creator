@@ -1,7 +1,5 @@
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,6 +24,12 @@ public class Main {
 		TMP_PATH = args[1];
 		String net_json_directory = args[2];
 		String database_name = args[3];
+		String bro_directory= args[4];
+
+		ReadBroLogs rbl = new ReadBroLogs(bro_directory, TMP_PATH);
+		rbl.loadDataset();
+
+
 		String url = "jdbc:postgresql://localhost:5432/" + database_name;
 		String user = "wajih";
 		String password = "corelight";
@@ -35,9 +39,9 @@ public class Main {
 
 		Connection connection = DriverManager.getConnection(url, user, password);
 
-		CreateZeekTables czt = new CreateZeekTables(connection);
-		czt.addBroProcessTable();
-		readDirecotryAndInsertSQL(net_json_directory,czt);
+//		CreateZeekTables czt = new CreateZeekTables(connection);
+//		czt.addBroProcessTable();
+//		readDirecotryAndInsertSQL(net_json_directory,czt);
 
 //		CreateTables createTables = new CreateTables(connection);
 //		createTables.addAllTables();
@@ -48,76 +52,23 @@ public class Main {
 
 	}
 
-	/**
-	 * Execute a bash command. We can handle complex bash commands including
-	 * multiple executions (; | && ||), quotes, expansions ($), escapes (\), e.g.:
-	 *     "cd /abc/def; mv ghi 'older ghi '$(whoami)"
-	 * @param command
-	 * @return true if bash got started, but your command may have failed.
-	 */
-	public static boolean executeBashCommand(String command) {
-		boolean success = false;
-		System.out.println("Executing BASH command:\n   " + command);
-		Runtime r = Runtime.getRuntime();
-		// Use bash -c so we can handle things like multi commands separated by ; and
-		// things like quotes, $, |, and \. My tests show that command comes as
-		// one argument to bash, so we do not need to quote it to make it one thing.
-		// Also, exec may object if it does not have an executable file as the first thing,
-		// so having bash here makes it happy provided bash is installed and in path.
-		String[] commands = {"bash", "-c", command};
-		try {
-			Process p = r.exec(commands);
 
-			p.waitFor();
-			BufferedReader b = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			String line = "";
-
-			while ((line = b.readLine()) != null) {
-				System.out.println(line);
-			}
-
-			b.close();
-			success = true;
-		} catch (Exception e) {
-			System.err.println("Failed to execute bash with command: " + command);
-			e.printStackTrace();
-		}
-		return success;
-	}
-
-	public static String getFileName(String path) {
-		if (path.contains("/")) {
-			String ret_string = path.substring(path.lastIndexOf("/") + 1);
-			return ret_string;
-		} else if (path.contains("\\")) {
-			String ret_string = path.substring(path.lastIndexOf("\\") + 1);
-			return ret_string;
-		}
-		return "";
-	}
-
-	public static String removeExtension(String filename){
-		if (filename.contains(".")) {
-			return filename.substring(0,filename.lastIndexOf("."));
-		}
-		return "";
-	}
 
 	public static void readDirecotryAndInsertSQL(String directory, ConvertJsonIntoSQL cjs){
 			String dataset_path =  directory;
-			executeBashCommand("rm -rf " + TMP_PATH + "/*");
-			executeBashCommand("mkdir -p " + TMP_PATH);
+			Utils.executeBashCommand("rm -rf " + TMP_PATH + "/*");
+			Utils.executeBashCommand("mkdir -p " + TMP_PATH);
 			try (Stream<Path> walk = Files.walk(Paths.get(dataset_path))) {
 				List<Path> file_paths = walk.collect((Collectors.toList()));
 				for (Path path : file_paths) {
 					if (path.toString().endsWith(".json.gz")) {
-						executeBashCommand("rm -rf " + TMP_PATH + "/*");
-						String test_name = getFileName(path.toString());
+						Utils.executeBashCommand("rm -rf " + TMP_PATH + "/*");
+						String test_name = Utils.getFileName(path.toString());
 						System.out.println(test_name);
 						String copied_path = TMP_PATH + test_name;
-						String final_path = TMP_PATH + removeExtension(test_name);
-						executeBashCommand("cp " + path + " " + copied_path);
-						executeBashCommand("gunzip -c " + copied_path + " > " + final_path);
+						String final_path = TMP_PATH + Utils.removeExtension(test_name);
+						Utils.executeBashCommand("cp " + path + " " + copied_path);
+						Utils.executeBashCommand("gunzip -c " + copied_path + " > " + final_path);
 						File[] files = new File(TMP_PATH).listFiles();
 						if (files.length <= 0) {
 							System.out.println("WARNING GO BACK");
@@ -125,7 +76,7 @@ public class Main {
 						}
 						System.out.println("==========Final path: " + final_path);
 						cjs.parseJsonFileWithoutOrder(final_path);
-						executeBashCommand("rm -rf "+ TMP_PATH +"/*");
+						Utils.executeBashCommand("rm -rf "+ TMP_PATH +"/*");
 						System.out.println("Done with \""+ test_name+"\"");
 					}
 				}
@@ -136,19 +87,19 @@ public class Main {
 	}
 	public static void readDirecotryAndInsertSQL(String directory, CreateZeekTables czt){
 		String dataset_path =  directory;
-		executeBashCommand("rm -rf " + TMP_PATH + "/*");
-		executeBashCommand("mkdir -p " + TMP_PATH);
+		Utils.executeBashCommand("rm -rf " + TMP_PATH + "/*");
+		Utils.executeBashCommand("mkdir -p " + TMP_PATH);
 		try (Stream<Path> walk = Files.walk(Paths.get(dataset_path))) {
 			List<Path> file_paths = walk.collect((Collectors.toList()));
 			for (Path path : file_paths) {
 				if (path.toString().endsWith(".json.gz")) {
-					executeBashCommand("rm -rf " + TMP_PATH + "/*");
-					String test_name = getFileName(path.toString());
+					Utils.executeBashCommand("rm -rf " + TMP_PATH + "/*");
+					String test_name = Utils.getFileName(path.toString());
 					System.out.println(test_name);
 					String copied_path = TMP_PATH + test_name;
-					String final_path = TMP_PATH + removeExtension(test_name);
-					executeBashCommand("cp " + path + " " + copied_path);
-					executeBashCommand("gunzip -c " + copied_path + " > " + final_path);
+					String final_path = TMP_PATH + Utils.removeExtension(test_name);
+					Utils.executeBashCommand("cp " + path + " " + copied_path);
+					Utils.executeBashCommand("gunzip -c " + copied_path + " > " + final_path);
 					File[] files = new File(TMP_PATH).listFiles();
 					if (files.length <= 0) {
 						System.out.println("WARNING GO BACK");
@@ -156,7 +107,7 @@ public class Main {
 					}
 					System.out.println("==========Final path: " + final_path);
 					czt.parseJsonFileWithoutOrder(final_path);
-					executeBashCommand("rm -rf "+ TMP_PATH +"/*");
+					Utils.executeBashCommand("rm -rf "+ TMP_PATH +"/*");
 					System.out.println("Done with \""+ test_name+"\"");
 				}
 			}

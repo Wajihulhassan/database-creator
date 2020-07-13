@@ -95,7 +95,12 @@ public class ConvertJsonIntoSQL {
             ps.setString(1, actorID);
             ps.setInt(2, pid);
             ps.setString(3, path);
-            ps.executeUpdate();
+            int i = ps.executeUpdate();
+            if (i > 0) {
+                System.out.println("success inserting");
+            } else {
+                System.out.println("stuck somewhere inserting");
+            }
             System.out.println(ps);
             ResultSet generatedKeys = ps.getGeneratedKeys();
             System.out.println(generatedKeys);

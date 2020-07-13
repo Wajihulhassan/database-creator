@@ -85,6 +85,7 @@ public class ConvertJsonIntoSQL {
     }
     void addProcessEntities() throws SQLException {
         System.out.println("Inserting process entities....");
+        connection.setAutoCommit(true);
         for (Map.Entry<String, ProcessEntities> entry: all_actors_map.entrySet()) {
             String actorID = entry.getKey();
             Integer pid = Integer.valueOf(entry.getValue().pid);
@@ -100,7 +101,7 @@ public class ConvertJsonIntoSQL {
             System.out.println(generatedKeys);
             ps.close();
         }
-
+        all_actors_map.clear();
     }
 
     void insertJson( Map<String, Object> jsonMap) throws SQLException, UnknownHostException {
@@ -240,6 +241,7 @@ public class ConvertJsonIntoSQL {
             if(ps!=null)
                 ps.close();
         }
+        connection.setAutoCommit(true);
         return;
     }
 
@@ -282,6 +284,7 @@ public class ConvertJsonIntoSQL {
             if(ps!=null)
                 ps.close();
         }
+        connection.setAutoCommit(true);
         return;
     }
 
@@ -323,6 +326,7 @@ public class ConvertJsonIntoSQL {
             if(ps!=null)
                 ps.close();
         }
+        connection.setAutoCommit(true);
         return;
     }
 
@@ -365,6 +369,7 @@ public class ConvertJsonIntoSQL {
             if(ps!=null)
                 ps.close();
         }
+        connection.setAutoCommit(true);
         return;
     }
 
@@ -413,6 +418,7 @@ public class ConvertJsonIntoSQL {
             if(ps!=null)
                 ps.close();
         }
+        connection.setAutoCommit(true);
         return;
     }
 }

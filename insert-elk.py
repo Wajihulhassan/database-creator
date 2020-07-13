@@ -13,3 +13,4 @@ for filename in os.listdir(directory):
         cmd_index = "curl  -H 'Content-Type: application/x-ndjson' -XPOST 'localhost:9200/{}/brotype/_bulk?pretty' --data-binary @{}  > /dev/null"
         cmd = cmd_index.format(db_name,full_path)
         print (cmd)
+        os.system(cmd)

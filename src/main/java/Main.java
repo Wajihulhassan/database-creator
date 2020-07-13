@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 public class Main {
 
-	Connection connection;
+	static Connection connection;
 
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
 		if (args.length != 5) {
@@ -19,17 +19,23 @@ public class Main {
 		String ecar_bro_path = args[2];
 		String database_name = args[3];
 		String bro_path = args[4];
-
-
+		connectToSQLDB(database_name);
+		//
+		LoadSQLTables lst = new LoadSQLTables(ecar_path,ecar_bro_path,bro_path,TMP_PATH, connection);
+		lst.createAndLoadEcarTables();
+		lst.createAndLoadEcarBroTables();
+		//
 		connection.close();
+	}
+	public static void createLoadSQLTable(){
 
 	}
-	public void connectToSQLDB(String databasename) throws ClassNotFoundException, SQLException {
+	public static void connectToSQLDB(String database_name) throws ClassNotFoundException, SQLException {
 		String url = "jdbc:postgresql://localhost:5432/" + database_name;
 		String user = "wajih";
 		String password = "corelight";
 		Class.forName("org.postgresql.Driver");
-		Connection connection = DriverManager.getConnection(url, user, password);
+		connection = DriverManager.getConnection(url, user, password);
 	}
 	public void loadBroLogs(String bro_path, String TMP_PATH){
 		ReadBroLogs rbl = new ReadBroLogs(bro_path, TMP_PATH);

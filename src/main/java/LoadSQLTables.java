@@ -29,6 +29,7 @@ public class LoadSQLTables {
 		createTables.addAllTables();
 		ConvertJsonIntoSQL cjs = new ConvertJsonIntoSQL(connection);
 		readDirecotryAndInsertSQL(ecar_path, cjs);
+		System.out.println("Size of all actors map: " + cjs.all_actors_map.size());
 		cjs.addProcessEntities();
     }
 

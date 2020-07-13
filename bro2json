@@ -127,7 +127,8 @@ def processFileContents(filename, handle, outputDirectory, args):
             fh.separator = binascii.unhexlify(first_line.split()[1][2:])
             oh = outputHandler(args.output, outputDirectory, filename, args.gzip)
             sts = filename.split(".")
-
+            print ("Running...")
+            print (filename)
             counter = 1
             for line in handle:
                 columns = line.strip().split(fh.separator)

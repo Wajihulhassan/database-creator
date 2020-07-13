@@ -96,14 +96,6 @@ public class ConvertJsonIntoSQL {
             ps.setInt(2, pid);
             ps.setString(3, path);
             int i = ps.executeUpdate();
-            if (i > 0) {
-                System.out.println("success inserting");
-            } else {
-                System.out.println("stuck somewhere inserting");
-            }
-            System.out.println(ps);
-            ResultSet generatedKeys = ps.getGeneratedKeys();
-            System.out.println(generatedKeys);
             ps.close();
         }
         all_actors_map.clear();
@@ -124,13 +116,10 @@ public class ConvertJsonIntoSQL {
 
         // FILTERING HACK
 
-//        if (!hostname.contains("Sysclient0051")){
-//            return;
-//        }
-//        if (!hostname.contains("Sysclient0351")){
-//            return;
-//        }
-        if (!hostname.contains("SysClient0219")){
+        if (!hostname.contains("Sysclient0051")){
+            return;
+        }
+        if (!hostname.contains("Sysclient0351")){
             return;
         }
         //

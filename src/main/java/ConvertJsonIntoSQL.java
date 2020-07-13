@@ -116,81 +116,77 @@ public class ConvertJsonIntoSQL {
 
         // FILTERING HACK
 
-        if (!hostname.contains("Sysclient0051")){
-            return;
-        }
-        if (!hostname.contains("Sysclient0351")){
-            return;
-        }
-        //
-        if (object.equalsIgnoreCase("process")){
-            if (action.equalsIgnoreCase("terminate")) {
+        if (hostname.contains("0051") || hostname.contains("0351")) {
+            //
+            if (object.equalsIgnoreCase("process")) {
+                if (action.equalsIgnoreCase("terminate")) {
+                    return;
+                }
+                String cmdline = this.getValue(jsonMap, "properties.command_line");
+                String parent_path = this.getValue(jsonMap, "properties.parent_image_path");
+                if (action.equalsIgnoreCase("create")) {
+                    addToProcess(actorID, ppid, parent_path);
+                    addToProcess(objectID, pid, image_path);
+                }
+                ProcessRow fr = new ProcessRow(ID, hostname, action, actorID, objectID, ts, cmdline);
+                this.process_rows.add(fr);
                 return;
             }
-            String cmdline = this.getValue(jsonMap, "properties.command_line");
-            String parent_path = this.getValue(jsonMap, "properties.parent_image_path");
-            if (action.equalsIgnoreCase("create")) {
-                addToProcess(actorID, ppid, parent_path);
-                addToProcess(objectID, pid, image_path);
-            }
-            ProcessRow fr = new ProcessRow(ID,hostname,action,actorID,objectID,ts,cmdline);
-            this.process_rows.add(fr);
-            return;
-        }
-        if (object.equalsIgnoreCase("file")){
-            if (action.equalsIgnoreCase("modify") || action.equalsIgnoreCase("rename") || action.equalsIgnoreCase("delete")) {
+            if (object.equalsIgnoreCase("file")) {
+                if (action.equalsIgnoreCase("modify") || action.equalsIgnoreCase("rename") || action.equalsIgnoreCase("delete")) {
+                    return;
+                }
+                if (!jsonMap.containsKey("properties.file_path")) {
+                    return;
+                }
+                addToProcess(actorID, pid, image_path);
+                String file_path = jsonMap.get("properties.file_path").toString();
+                String size = "";
+                if (action.equalsIgnoreCase("write")) {
+                    size = jsonMap.get("properties.size").toString();
+                }
+                FileRow fr = new FileRow(ID, hostname, action, actorID, objectID, ts, file_path);
+                this.file_rows.add(fr);
                 return;
             }
-            if (!jsonMap.containsKey("properties.file_path")){
-                return;
-            }
-            addToProcess(actorID, pid, image_path);
-            String file_path = jsonMap.get("properties.file_path").toString();
-            String size = "";
-            if (action.equalsIgnoreCase("write")) {
-                size = jsonMap.get("properties.size").toString();
-            }
-            FileRow fr = new FileRow(ID,hostname,action,actorID,objectID,ts,file_path);
-            this.file_rows.add(fr);
-            return;
-        }
 
-        if (object.equalsIgnoreCase("module")){
-            if (action.equalsIgnoreCase("unload")) {
+            if (object.equalsIgnoreCase("module")) {
+                if (action.equalsIgnoreCase("unload")) {
+                    return;
+                }
+                addToProcess(actorID, pid, image_path);
+                String module_path = jsonMap.get("properties.module_path").toString();
+                ModuleRow mr = new ModuleRow(ID, hostname, action, actorID, objectID, ts, module_path);
+                this.module_rows.add(mr);
                 return;
             }
-            addToProcess(actorID, pid, image_path);
-            String module_path = jsonMap.get("properties.module_path").toString();
-            ModuleRow mr = new ModuleRow(ID,hostname,action,actorID,objectID,ts,module_path);
-            this.module_rows.add(mr);
-            return;
-        }
 
-        if (object.equalsIgnoreCase("registry")){
-            addToProcess(actorID, pid, image_path);
-            String key_path = jsonMap.get("properties.key").toString();
-            String key_type =  getValue(jsonMap,"properties.type");
-            String key_value = getValue(jsonMap,"properties.value");
+            if (object.equalsIgnoreCase("registry")) {
+                addToProcess(actorID, pid, image_path);
+                String key_path = jsonMap.get("properties.key").toString();
+                String key_type = getValue(jsonMap, "properties.type");
+                String key_value = getValue(jsonMap, "properties.value");
 
-            RegistryRow rr = new RegistryRow(ID,hostname,action,actorID,objectID,ts,key_path,key_type,key_value);
-            this.registry_rows.add(rr);
-            return;
-        }
-        if (object.equalsIgnoreCase("flow")){
-            if (!action.equalsIgnoreCase("start")) {
+                RegistryRow rr = new RegistryRow(ID, hostname, action, actorID, objectID, ts, key_path, key_type, key_value);
+                this.registry_rows.add(rr);
                 return;
             }
-            addToProcess(actorID, pid, image_path);
-            String srcip = jsonMap.get("properties.src_ip").toString();
-            Integer srcport = Integer.valueOf(jsonMap.get("properties.src_port").toString());
-            String dstip =  jsonMap.get("properties.dest_ip").toString();
-            Integer dstport = Integer.valueOf(jsonMap.get("properties.dest_port").toString());
-            String direction = jsonMap.get("properties.direction").toString();
-            Integer protocol = Integer.valueOf(jsonMap.get("properties.l4protocol").toString());
+            if (object.equalsIgnoreCase("flow")) {
+                if (!action.equalsIgnoreCase("start")) {
+                    return;
+                }
+                addToProcess(actorID, pid, image_path);
+                String srcip = jsonMap.get("properties.src_ip").toString();
+                Integer srcport = Integer.valueOf(jsonMap.get("properties.src_port").toString());
+                String dstip = jsonMap.get("properties.dest_ip").toString();
+                Integer dstport = Integer.valueOf(jsonMap.get("properties.dest_port").toString());
+                String direction = jsonMap.get("properties.direction").toString();
+                Integer protocol = Integer.valueOf(jsonMap.get("properties.l4protocol").toString());
 
-            SocketRow fr = new SocketRow(ID,hostname,action,actorID,objectID,ts,dstip,dstport,srcip,srcport,direction,protocol);
-            this.socket_rows.add(fr);
-            return;
+                SocketRow fr = new SocketRow(ID, hostname, action, actorID, objectID, ts, dstip, dstport, srcip, srcport, direction, protocol);
+                this.socket_rows.add(fr);
+                return;
+            }
         }
     }
 

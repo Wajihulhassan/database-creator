@@ -1,18 +1,20 @@
+package rows;
+
 import java.sql.Timestamp;
 
 public class SocketRow {
-    String ID;
-    String hostname;
-    String action;
-    String actorID;
-    String objectID;
-    Timestamp ts;
-    String dest_ip;
-    int dest_port;
-    String src_ip;
-    int src_port;
-    String direction;
-    int l4protocol;
+    public String ID;
+    public String hostname;
+    public String action;
+    public String actorID;
+    public String objectID;
+    public Timestamp ts;
+    public String dest_ip;
+    public int dest_port;
+    public String src_ip;
+    public int src_port;
+    public String direction;
+    public int l4protocol;
 
     public SocketRow(String ID, String hostname, String action, String actorID, String objectID, Timestamp ts,
                      String dest_ip, int dest_port, String src_ip, int src_port, String direction, int l4protocol) {

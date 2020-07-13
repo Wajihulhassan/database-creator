@@ -1,14 +1,16 @@
+package rows;
+
 import java.sql.Timestamp;
 
 public class ModuleRow {
 
-    String ID;
-    String hostname;
-    String action;
-    String actorID;
-    String objectID;
-    Timestamp ts;
-    String module_path;
+    public String ID;
+    public String hostname;
+    public String action;
+    public String actorID;
+    public String objectID;
+    public Timestamp ts;
+    public String module_path;
 
     public ModuleRow(String ID, String hostname, String action, String actorID, String objectID, Timestamp timestamp, String module_path) {
         this.ID = ID;

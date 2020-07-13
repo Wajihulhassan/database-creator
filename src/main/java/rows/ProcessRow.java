@@ -1,13 +1,15 @@
+package rows;
+
 import java.sql.Timestamp;
 
 public class ProcessRow {
-    String ID;
-    String hostname;
-    String action;
-    String actorID;
-    String objectID;
-    Timestamp ts;
-    String command_line;
+    public String ID;
+    public String hostname;
+    public String action;
+    public String actorID;
+    public String objectID;
+    public Timestamp ts;
+    public String command_line;
 
     public ProcessRow(String ID, String hostname, String action, String actorID, String objectID, Timestamp timestamp, String command_line) {
         this.ID = ID;

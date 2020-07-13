@@ -1,6 +1,7 @@
 import com.github.wnameless.json.flattener.JsonFlattener;
 import org.joda.time.Instant;
 import org.json.JSONObject;
+import rows.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -83,18 +84,20 @@ public class ConvertJsonIntoSQL {
 
     }
     void addProcessEntities() throws SQLException {
+        System.out.println("Inserting process entities....");
         for (Map.Entry<String, ProcessEntities> entry: all_actors_map.entrySet()) {
             String actorID = entry.getKey();
             Integer pid = Integer.valueOf(entry.getValue().pid);
             String path = entry.getValue().image_path;
-            String sql = "insert into process_entities(id, pid, path)"
-                    + "values (?,?,?)";
+            String sql = "insert into process_entities(id, pid, path) values (?,?,?)";
             PreparedStatement ps = this.connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, actorID);
             ps.setInt(2, pid);
             ps.setString(3, path);
             ps.executeUpdate();
+            System.out.println(ps);
             ResultSet generatedKeys = ps.getGeneratedKeys();
+            System.out.println(generatedKeys);
             ps.close();
         }
 

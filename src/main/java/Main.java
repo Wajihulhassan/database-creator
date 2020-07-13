@@ -21,14 +21,14 @@ public class Main {
 		String bro_path = args[4];
 		connectToSQLDB(database_name);
 		//
-		LoadSQLTables lst = new LoadSQLTables(ecar_path,ecar_bro_path,bro_path,TMP_PATH, connection);
-		lst.createAndLoadEcarTables();
-		lst.createAndLoadEcarBroTables();
+		createLoadSQLTable(ecar_path,ecar_bro_path,bro_path,TMP_PATH,connection);
 		//
 		connection.close();
 	}
-	public static void createLoadSQLTable(){
-
+	public static void createLoadSQLTable(String ecar_path, String ecar_bro_path, String bro_path, String TMP_PATH, Connection connection) throws SQLException, ClassNotFoundException {
+		LoadSQLTables lst = new LoadSQLTables(ecar_path,ecar_bro_path,bro_path,TMP_PATH, connection);
+		lst.createAndLoadEcarTables();
+		lst.createAndLoadEcarBroTables();
 	}
 	public static void connectToSQLDB(String database_name) throws ClassNotFoundException, SQLException {
 		String url = "jdbc:postgresql://localhost:5432/" + database_name;

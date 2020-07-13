@@ -5,4 +5,4 @@ export MAVEN_OPTS="-Xmx50g"
 
 #mvn compile && mvn exec:java -Dexec.mainClass="Main"  -Dexec.args="/Users/wajih/Downloads/logs/short ./src/tmp/"
 
-mvn compile && mvn exec:java -Dexec.mainClass="Main"  -Dexec.args="/data/disk1/optc-dataset/ecar/evaluation/tmp/ /data/disk2/backup-dataset/tmp/ /data/disk1/optc-dataset/ecar-bro/evaluation/25Sept/ 2019-09-25 /Users/wajih/Downloads/logs/bro/"
+mvn compile && mvn exec:java -Dexec.mainClass="Main"  -Dexec.args="/data/disk1/optc-dataset/ecar/evaluation/25Sept/ /data/disk2/backup-dataset/tmp/ /data/disk1/optc-dataset/ecar-bro/evaluation/25Sept/ 2019-09-25 /Users/wajih/Downloads/logs/bro/"

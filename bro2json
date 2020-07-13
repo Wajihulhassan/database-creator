@@ -127,6 +127,7 @@ def processFileContents(filename, handle, outputDirectory, args):
             fh.separator = binascii.unhexlify(first_line.split()[1][2:])
             oh = outputHandler(args.output, outputDirectory, filename, args.gzip)
             sts = filename.split(".")
+            id_name = '_'.join(sts[:-1])
             print ("Running...")
             print (filename)
             counter = 1
@@ -150,7 +151,7 @@ def processFileContents(filename, handle, outputDirectory, args):
                                 row[fh.fields[i]] = convertedValue
                         if args.path:
                             row['@path'] = fh.path
-                        oh.write(row,counter,sts[0])
+                        oh.write(row,counter,id_name)
                         counter = counter + 1
                     except Exception as e:
                         tb = traceback.format_exc()

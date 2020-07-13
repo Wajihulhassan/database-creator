@@ -53,12 +53,6 @@
           <version>7.8.0</version>
       </dependency>
 
-      <dependency>
-          <groupId>org.elasticsearch.plugin</groupId>
-          <artifactId>delete-by-query</artifactId>
-          <version>5.0.0</version>
-      </dependency>
-
   </dependencies>
 
     <properties>

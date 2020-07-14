@@ -8,7 +8,7 @@ public class Main {
 	static Connection connection;
 
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
-		if (args.length != 5) {
+		if (args.length != 4) {
 			System.out.println("Arguments are missing");
 			return;
 		}
@@ -18,15 +18,14 @@ public class Main {
 		String TMP_PATH = args[1];
 		String ecar_bro_path = args[2];
 		String database_name = args[3];
-		String bro_path = args[4];
 		connectToSQLDB(database_name);
 		//
-		createLoadSQLTable(ecar_path,ecar_bro_path,bro_path,TMP_PATH,connection);
+		createLoadSQLTable(ecar_path,ecar_bro_path,TMP_PATH,connection);
 		//
 		connection.close();
 	}
-	public static void createLoadSQLTable(String ecar_path, String ecar_bro_path, String bro_path, String TMP_PATH, Connection connection) throws SQLException, ClassNotFoundException {
-		LoadSQLTables lst = new LoadSQLTables(ecar_path,ecar_bro_path,bro_path,TMP_PATH, connection);
+	public static void createLoadSQLTable(String ecar_path, String ecar_bro_path,String TMP_PATH, Connection connection) throws SQLException, ClassNotFoundException {
+		LoadSQLTables lst = new LoadSQLTables(ecar_path,ecar_bro_path,TMP_PATH, connection);
 		lst.createAndLoadEcarTables();
 		lst.createAndLoadEcarBroTables();
 	}
@@ -37,9 +36,6 @@ public class Main {
 		Class.forName("org.postgresql.Driver");
 		connection = DriverManager.getConnection(url, user, password);
 	}
-	public void loadBroLogs(String bro_path, String TMP_PATH){
-		ReadBroLogs rbl = new ReadBroLogs(bro_path, TMP_PATH);
-		rbl.loadDataset();
-	}
+
 
 }

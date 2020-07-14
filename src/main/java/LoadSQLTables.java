@@ -13,15 +13,13 @@ import java.util.stream.Stream;
 public class LoadSQLTables {
     String ecar_path;
     String ecar_bro_path;
-    String bro_path;
     String TMP_PATH;
     Connection connection;
 
 
-    public LoadSQLTables(String ecar_path, String ecar_bro_path, String bro_path, String TMP_PATH, Connection connection) {
+    public LoadSQLTables(String ecar_path, String ecar_bro_path, String TMP_PATH, Connection connection) {
         this.ecar_path = ecar_path;
         this.ecar_bro_path = ecar_bro_path;
-        this.bro_path = bro_path;
         this.TMP_PATH = TMP_PATH;
         this.connection = connection;
     }

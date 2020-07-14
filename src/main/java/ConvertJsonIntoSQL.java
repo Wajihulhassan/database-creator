@@ -122,6 +122,9 @@ public class ConvertJsonIntoSQL {
                 if (action.equalsIgnoreCase("terminate")) {
                     return;
                 }
+                if (objectID.equals(actorID)){
+                    return;
+                }
                 String cmdline = this.getValue(jsonMap, "properties.command_line");
                 String parent_path = this.getValue(jsonMap, "properties.parent_image_path");
                 if (action.equalsIgnoreCase("create")) {

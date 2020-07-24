@@ -39,7 +39,6 @@ public class CreateZeekTables {
         }
         fileReader.close();
         System.out.println("Done inserting.....");
-        //addProcessEntities();
     }
 
     void addBroProcessTable() throws SQLException {
@@ -49,7 +48,7 @@ public class CreateZeekTables {
         stmt.executeUpdate(drop_sql);
 
         String sql = "CREATE TABLE bro_process_events(id varchar(40) not null primary key, timestamp timestamp, hostname varchar(50), " +
-                "action varchar(10), actorID varchar(40), objectID varchar(40), bro_uid varchar(30))";
+                "action varchar(10), actorID varchar(40), objectID varchar(40), bro_uid varchar(30), pid int)";
         stmt.executeUpdate(sql);
 
         String index_sql = "CREATE INDEX index_objectID on bro_process_events(objectID)";
@@ -66,26 +65,25 @@ public class CreateZeekTables {
         String actorID = jsonMap.get("actorID").toString();
         String objectID = jsonMap.get("objectID").toString();
         String object = jsonMap.get("object").toString();
+        String pid = jsonMap.get("pid").toString();
         String timestamp = jsonMap.get("timestamp").toString();
         Timestamp ts = new Timestamp(Instant.parse(timestamp).getMillis());
         String bro_uid = jsonMap.get("properties.bro_uid").toString();
+        String sql = "insert into bro_process_events(id, timestamp, hostname, action, actorID, objectID, bro_uid)"
+                    + "values (?,?,?,?,?,?,?,?)";
+        PreparedStatement ps = this.connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        ps.setString(1, ID);
+        ps.setTimestamp(2, ts);
+        ps.setString(3, hostname);
+        ps.setString(4,action);
+        ps.setString(5,actorID);
+        ps.setString(6,objectID);
+        ps.setString(7,bro_uid);
+        ps.setInt(7,Integer.valueOf(pid));
 
-        if (object.equalsIgnoreCase("flow")) {
+        ps.executeUpdate();
+        ps.close();
 
-            String sql = "insert into bro_process_events(id, timestamp, hostname, action, actorID, objectID, bro_uid)"
-                    + "values (?,?,?,?,?,?,?)";
-            PreparedStatement ps = this.connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, ID);
-            ps.setTimestamp(2, ts);
-            ps.setString(3, hostname);
-            ps.setString(4,action);
-            ps.setString(5,actorID);
-            ps.setString(6,objectID);
-            ps.setString(7,bro_uid);
-
-            ps.executeUpdate();
-            ps.close();
-        }
 
     }
     }

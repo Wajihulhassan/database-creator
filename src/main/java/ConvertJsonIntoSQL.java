@@ -135,12 +135,12 @@ public class ConvertJsonIntoSQL {
                     addToProcess(actorID, ppid, parent_path);
                     addToProcess(objectID, pid, image_path);
                 }
-                ProcessRow fr = new ProcessRow(ID, hostname, action, actorID, objectID, ts, cmdline);
+                ProcessRow fr = new ProcessRow(ID, hostname, action, actorID, objectID, ts, cmdline, timestamp);
                 this.process_rows.add(fr);
                 return;
             }
             if (object.equalsIgnoreCase("file")) {
-                if (action.equalsIgnoreCase("modify") || action.equalsIgnoreCase("rename") || action.equalsIgnoreCase("delete")) {
+                if (action.equalsIgnoreCase("rename")) {
                     return;
                 }
                 if (!jsonMap.containsKey("properties.file_path")) {
@@ -152,7 +152,7 @@ public class ConvertJsonIntoSQL {
                 if (action.equalsIgnoreCase("write")) {
                     size = jsonMap.get("properties.size").toString();
                 }
-                FileRow fr = new FileRow(ID, hostname, action, actorID, objectID, ts, file_path);
+                FileRow fr = new FileRow(ID, hostname, action, actorID, objectID, ts, file_path, timestamp);
                 this.file_rows.add(fr);
                 return;
             }
@@ -190,7 +190,7 @@ public class ConvertJsonIntoSQL {
                 String direction = jsonMap.get("properties.direction").toString();
                 Integer protocol = Integer.valueOf(jsonMap.get("properties.l4protocol").toString());
 
-                SocketRow fr = new SocketRow(ID, hostname, action, actorID, objectID, ts, dstip, dstport, srcip, srcport, direction, protocol);
+                SocketRow fr = new SocketRow(ID, hostname, action, actorID, objectID, ts, dstip, dstport, srcip, srcport, direction, protocol, timestamp);
                 this.socket_rows.add(fr);
                 return;
             }
@@ -244,8 +244,8 @@ public class ConvertJsonIntoSQL {
 
 
     void bulkFileEventsInsert() throws SQLException {
-        String sql = "insert into file_events(id, timestamp, hostname, action, actorID, objectID, file_path)"
-                + "values (?,?,?,?,?,?,?)";
+        String sql = "insert into file_events(id, timestamp, hostname, action, actorID, objectID, file_path, ts_string)"
+                + "values (?,?,?,?,?,?,?,?)";
         PreparedStatement ps = null;
         int count = 0;
         int batchSize = BATCH_SIZE;
@@ -262,6 +262,7 @@ public class ConvertJsonIntoSQL {
                 ps.setString(5,fr.actorID);
                 ps.setString(6,fr.objectID);
                 ps.setString(7,fr.file_path);
+                ps.setString(8,fr.ts_string);
                 ps.addBatch();
                 count++;
                 if(count % batchSize == 0){
@@ -286,8 +287,8 @@ public class ConvertJsonIntoSQL {
     }
 
     void bulkProcessEventsInsert() throws SQLException {
-        String sql = "insert into process_events(id, timestamp, hostname, action, actorID, objectID, command_line)"
-                + "values (?,?,?,?,?,?,?)";
+        String sql = "insert into process_events(id, timestamp, hostname, action, actorID, objectID, command_line, ts_string)"
+                + "values (?,?,?,?,?,?,?,?)";
         PreparedStatement ps = null;
         int count = 0;
         int batchSize = BATCH_SIZE;
@@ -304,6 +305,7 @@ public class ConvertJsonIntoSQL {
                 ps.setString(5,fr.actorID);
                 ps.setString(6,fr.objectID);
                 ps.setString(7,fr.command_line);
+                ps.setString(8,fr.ts_string);
                 ps.addBatch();
                 count++;
                 if(count % batchSize == 0){
@@ -371,8 +373,8 @@ public class ConvertJsonIntoSQL {
     }
 
     void bulkSocketEventsInsert() throws SQLException {
-        String sql = "insert into socket_events(id, timestamp, hostname, action, actorID, objectID, dest_ip,dest_port,src_ip,src_port,direction,l4protocol)"
-                + "values (?,?,?,?,?,?,?::inet,?,?,?,?,?)";
+        String sql = "insert into socket_events(id, timestamp, hostname, action, actorID, objectID, dest_ip,dest_port,src_ip,src_port,direction,l4protocol, ts_string)"
+                + "values (?,?,?,?,?,?,?::inet,?,?,?,?,?,?)";
         PreparedStatement ps = null;
         int count = 0;
         int batchSize = BATCH_SIZE;
@@ -395,6 +397,7 @@ public class ConvertJsonIntoSQL {
                 ps.setInt(10,fr.src_port);
                 ps.setString(11,fr.direction);
                 ps.setInt(12,fr.l4protocol);
+                ps.setString(13,fr.ts_string);
 
                 ps.addBatch();
                 count++;

@@ -26,7 +26,7 @@ public class CreateTables{
 		String drop_sql = "DROP TABLE IF EXISTS process_events";
 		stmt.executeUpdate(drop_sql);
 		String sql = "CREATE TABLE process_events(id varchar(40) not null primary key, timestamp timestamp, hostname varchar(50), " +
-				"action varchar(10), actorID varchar(40), objectID varchar(40), command_line varchar)";
+				"action varchar(10), actorID varchar(40), objectID varchar(40), command_line varchar, ts_string varchar)";
 		stmt.executeUpdate(sql);
 		stmt.close();
 	}
@@ -46,7 +46,7 @@ public class CreateTables{
 		stmt.executeUpdate(drop_sql);
 		String sql = "CREATE TABLE file_events(id varchar(40) not null primary key, timestamp timestamp, hostname varchar(50), " +
 				"action varchar(10), actorID varchar(40), objectID varchar(40)," +
-				"file_path varchar)";
+				"file_path varchar, ts_string varchar)";
 		stmt.executeUpdate(sql);
 		stmt.close();
 	}
@@ -79,7 +79,7 @@ public class CreateTables{
 		stmt.executeUpdate(drop_sql);
 		String sql = "CREATE TABLE socket_events(id varchar(40) not null primary key, timestamp timestamp, hostname varchar(50), " +
 				"action varchar(10), actorID varchar(40), objectID varchar(40), " +
-				"dest_ip varchar(40), dest_port int, src_ip varchar(40), src_port int, direction varchar (10), l4protocol int)";
+				"dest_ip varchar(40), dest_port int, src_ip varchar(40), src_port int, direction varchar (10), l4protocol int, ts_string varchar)";
 		stmt.executeUpdate(sql);
 		stmt.close();
 	}

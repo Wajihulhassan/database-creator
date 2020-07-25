@@ -69,7 +69,7 @@ public class CreateZeekTables {
         String timestamp = jsonMap.get("timestamp").toString();
         Timestamp ts = new Timestamp(Instant.parse(timestamp).getMillis());
         String bro_uid = jsonMap.get("properties.bro_uid").toString();
-        String sql = "insert into bro_process_events(id, timestamp, hostname, action, actorID, objectID, bro_uid)"
+        String sql = "insert into bro_process_events(id, timestamp, hostname, action, actorID, objectID, bro_uid, pid)"
                     + "values (?,?,?,?,?,?,?,?)";
         PreparedStatement ps = this.connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         ps.setString(1, ID);
@@ -79,7 +79,7 @@ public class CreateZeekTables {
         ps.setString(5,actorID);
         ps.setString(6,objectID);
         ps.setString(7,bro_uid);
-        ps.setInt(7,Integer.valueOf(pid));
+        ps.setInt(8,Integer.valueOf(pid));
 
         ps.executeUpdate();
         ps.close();

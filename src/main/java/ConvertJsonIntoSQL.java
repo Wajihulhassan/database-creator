@@ -119,8 +119,11 @@ public class ConvertJsonIntoSQL {
         // DAY 3
         //if (hostname.contains("0051") || hostname.contains("0351")) {
 
+        //Day 2
+        if (hostname.contains("0501") || hostname.contains("0974")) {
+
         // Day 1
-        if (hostname.contains("0201") || hostname.contains("0402") || hostname.contains("0660") || hostname.contains("DC1")) {
+        //if (hostname.contains("0201") || hostname.contains("0402") || hostname.contains("0660") || hostname.contains("DC1")) {
             //
             if (object.equalsIgnoreCase("process")) {
                 if (action.equalsIgnoreCase("terminate")) {

@@ -27,7 +27,7 @@ public class Main {
 	public static void createLoadSQLTable(String ecar_path, String ecar_bro_path,String TMP_PATH, Connection connection) throws SQLException, ClassNotFoundException {
 		LoadSQLTables lst = new LoadSQLTables(ecar_path,ecar_bro_path,TMP_PATH, connection);
 		lst.createAndLoadEcarTables();
-		lst.createAndLoadEcarBroTables();
+		//lst.createAndLoadEcarBroTables();
 	}
 	public static void connectToSQLDB(String database_name) throws ClassNotFoundException, SQLException {
 		String url = "jdbc:postgresql://localhost:5432/" + database_name;

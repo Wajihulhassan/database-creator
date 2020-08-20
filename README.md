@@ -1,2 +1,2 @@
-# JDBC-PostgreSQL-SimpleExample
-Very simple example of JDBC with PostgreSQL.
+# Converts Darpa Dataset (.json) into PostgreSQL tables
+

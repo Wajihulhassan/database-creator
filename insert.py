@@ -104,12 +104,16 @@ def load_bro(day, idx):
 if __name__ == '__main__':
     es = Elasticsearch(hosts = [{'host': 'localhost', 'port': 9200}], timeout=60, max_retries=5, retry_on_timeout=True)
 
-    day = ["25Sept"]
-    bro_day = ["2019-09-25"]
+    # day = ["25Sept"]
+    # bro_day = ["2019-09-25"]
+
+    day = ["24Sep19"]
+    bro_day = ["2019-09-24"]
+    
     idx =  day[0].lower()
 
-    # load_ecar(day, idx)
-    # load_ecar_bro(day, idx)
+    load_ecar(day, idx)
+    load_ecar_bro(day, idx)
     load_bro(bro_day, idx+"bro")
     
     

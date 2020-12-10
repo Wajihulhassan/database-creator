@@ -75,7 +75,7 @@ def send_data_yield(contents, shortname):
         i = i + 1
 
 def load_bro(day, idx):
-    delete_index(idx)
+    # delete_index(idx)
     
     directory = "/shared/projects/Optc-dataset/optc-dataset/bro/" + day[0] + "/"
     print("directory "  + directory)
@@ -97,6 +97,7 @@ def load_bro(day, idx):
         deque(response, maxlen=0)
         
         print ("\n Bulk RESPONSE: ", response)
+    print("Done indexing bro logs")
 
 
 
@@ -112,8 +113,8 @@ if __name__ == '__main__':
     
     idx =  day[0].lower()
 
-    load_ecar(day, idx)
-    load_ecar_bro(day, idx)
+    # load_ecar(day, idx)
+    # load_ecar_bro(day, idx)
     load_bro(bro_day, idx+"bro")
     
     
